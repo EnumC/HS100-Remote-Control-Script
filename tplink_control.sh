@@ -8,7 +8,7 @@
 
 ############# CONFIG ################
 # Change DEVICEID to the device you want to control
-# by running ./tplink_control GETDEVICEINFO
+# by running ./tplink_control INIT_CONFIG
 ############# /CONFIG ################
 if [ ! -f ~/.tplink.token ]; then
     echo "~/.tplink.token does NOT exist!"
@@ -130,6 +130,8 @@ stty echo
     echo "Token: $input has been stored!"
     echo "token="$input >~/.tplink.token
     echo
+    unset username
+    unset password
     echo "Your username and password has been wiped!"
     echo
     if [ ! -f ~/.tplink.token ]; then
@@ -163,7 +165,7 @@ fi
 
 if [ "$COMMAND" = "" ]
   then
-    echo 'Usage: ./tplink_control ON/OFF/GETTOKEN/GETDEVICEINFO'
+    echo 'Usage: ./tplink_control ON/OFF/GETTOKEN/GETDEVICEINFO/INIT_CONFIG'
   elif [ "$COMMAND" = "ON" ]
     then
       turnOn
@@ -178,6 +180,6 @@ if [ "$COMMAND" = "" ]
       getDeviceInfo
       echo
   else
-    echo 'Usage: ./tplink_control ON/OFF/GETTOKEN/GETDEVICEINFO'
+    echo 'Usage: ./tplink_control ON/OFF/GETTOKEN/GETDEVICEINFO/INIT_CONFIG'
 fi
 echo
