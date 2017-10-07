@@ -38,6 +38,7 @@ EOF
 function getToken {
   curl -s -XPOST -H "Content-type: application/json" -d "$(generate_post_data)" 'https://wap.tplinkcloud.com' | jq '.'
 }
+
 function turnOn {
   request_body=$(cat <<EOF
 {
@@ -68,6 +69,18 @@ function getDeviceInfo {
   curl -s --request POST "https://wap.tplinkcloud.com?token=${token} HTTP/1.1" \
    --data '{"method":"getDeviceList"}' \
    --header "Content-Type: application/json" | jq '.'
+}
+
+function checkToken {
+  curl -s --request POST "https://wap.tplinkcloud.com?token=${token} HTTP/1.1" \
+   --data '{"method":"getDeviceList"}' \
+   --header "Content-Type: application/json" | grep '"error_code":0'>/dev/null
+   if [ ! $? -eq 0 ]; then
+     echo "***Error! Token Expired/Invalid. Please run ./tplink_control INIT_CONFIG***"
+     echo
+     exit 1
+   fi
+
 }
 
 if [ "$COMMAND" = "INIT_CONFIG" ]
@@ -162,7 +175,7 @@ fi
 
 
 
-
+checkToken
 if [ "$COMMAND" = "" ]
   then
     echo 'Usage: ./tplink_control ON/OFF/GETTOKEN/GETDEVICEINFO/INIT_CONFIG'
